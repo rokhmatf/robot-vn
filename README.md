@@ -24,7 +24,7 @@ source robot-visual-navigation-env/bin/activate
 
 Start by cloning this repository and installing the dependencies:
 ```bash
-git clone https://github.com/jkulhanek/robot-visual-navigation.git
+git clone https://github.com/rokhmatf/robot-vn.git
 cd robot-visual-navigation
 pip install -r requirements.txt
 cd python
