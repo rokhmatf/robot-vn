@@ -1,6 +1,8 @@
 # Visual Navigation in Real-World Indoor Environments Using End-to-End Deep Reinforcement Learning
 This repository contains the official implementation of paper Visual Navigation in Real-World Indoor Environments Using End-to-End Deep Reinforcement Learning.
 
+The original github = https://github.com/jkulhanek/robot-visual-navigation
+
 [Paper](https://arxiv.org/pdf/2010.10903.pdf)&nbsp;&nbsp;&nbsp;
 [Web](https://jkulhanek.github.io/robot-visual-navigation/)&nbsp;&nbsp;&nbsp;
 [Demo](https://colab.research.google.com/github/jkulhanek/robot-visual-navigation/blob/master/notebooks/robot-visual-navigation-playground.ipynb)
