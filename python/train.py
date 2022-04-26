@@ -20,7 +20,7 @@ class WandbMetricHandler(MetricHandlerBase):
 
     def collect(self, collection, time, mode='train'):
         if self.run is None:
-            self.run = wandb.init(project='robot-visual-navigation')
+            self.run = wandb.init(project='robot-visual-navigation-cougar')
         self.run.log(dict(collection), step=time)
         pass
 
