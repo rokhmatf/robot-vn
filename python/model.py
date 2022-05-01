@@ -37,24 +37,22 @@ class VisualNavigationModel(nn.Module):
 
         # 84
         self.shared_base = TimeDistributed(nn.Sequential(
-            nn.Conv2d(num_inputs, 32, 5),   # 80
+            nn.Conv2d(num_inputs, 32, 4, stride=2),   # 80
             nn.ReLU(True),
-            nn.Conv2d(32, 16, 3, stride=3), # 26
-            nn.ReLU(True),
-            nn.Conv2d(16, 16, 3),   # 24
+            nn.Conv2d(32, 16, 3, stride=2), # 26
             nn.ReLU(True),
         ))
 
         self.conv_base = TimeDistributed(nn.Sequential(
-            nn.Conv2d(32, 32, 3, stride=3),  # 9 -> 8
+            nn.Conv2d(32, 32, 4, stride=2),  # 9
             nn.ReLU(True),
-            nn.Conv2d(32, 32, 1),  # 9 -> 8
+            nn.Conv2d(32, 32, 1),  # 9
             nn.ReLU(),
         ))
 
         self.conv_merge = TimeDistributed(nn.Sequential(
             Flatten(),
-            nn.Linear(8 ** 2 * 32, self.main_output_size),
+            nn.Linear(9 ** 2 * 32, self.main_output_size),
             nn.ReLU()
         ))
 
@@ -78,26 +76,26 @@ class VisualNavigationModel(nn.Module):
 
     def _create_deconv_networks(self):
         self.deconv_depth = TimeDistributed(nn.Sequential(
-            Unflatten(32, 8, 8),
-            nn.ConvTranspose2d(32, 16, kernel_size=3, stride=3),  # 20 -> 24
+            Unflatten(32, 9, 9),
+            nn.ConvTranspose2d(32, 16, kernel_size=4, stride=2),  # 20
             nn.ReLU(),
-            nn.ConvTranspose2d(16, 1, kernel_size=3, stride=3),  # 42 -> 72
+            nn.ConvTranspose2d(16, 1, kernel_size=4, stride=2),  # 42
         ))
 
         self.deconv_rgb = TimeDistributed(nn.Sequential(
-            Unflatten(32, 8, 8),
-            nn.ConvTranspose2d(32, 16, kernel_size=3, stride=3),
+            Unflatten(32, 9, 9),
+            nn.ConvTranspose2d(32, 16, kernel_size=4, stride=2),
             nn.ReLU(),
         ))
 
         self.deconv_rgb_goal = TimeDistributed(nn.Sequential(
-            Unflatten(32, 8, 8),
-            nn.ConvTranspose2d(32, 16, kernel_size=3, stride=3),
+            Unflatten(32, 9, 9),
+            nn.ConvTranspose2d(32, 16, kernel_size=4, stride=2),
             nn.ReLU(),
         ))
 
         self.deconv_rgb_shared = TimeDistributed(nn.Sequential(
-            nn.ConvTranspose2d(16, 3, kernel_size=3, stride=3)
+            nn.ConvTranspose2d(16, 3, kernel_size=4, stride=2)
         ))
 
         self.deconv_depth.apply(self.init_weights)
@@ -127,28 +125,28 @@ class VisualNavigationModel(nn.Module):
 
     def _create_pixel_control_network(self, num_outputs):
         self.pc_base = TimeDistributed(nn.Sequential(
-            nn.Linear(self.lstm_hidden_size, 32 * 8 * 8),
+            nn.Linear(self.lstm_hidden_size, 32 * 9 * 9),
             nn.ReLU()
         ))
 
         self.pc_action = TimeDistributed(nn.Sequential(
-            nn.ConvTranspose2d(32, 32, kernel_size=3, stride=3),  # 20 -> 24
+            nn.ConvTranspose2d(32, 32, kernel_size=4, stride=2),  # 20
             nn.ReLU(),
-            nn.ConvTranspose2d(32, 1, kernel_size=3, stride=3),  # 42 -> 72
+            nn.ConvTranspose2d(32, 1, kernel_size=4, stride=2),  # 42
             nn.ReLU()
         ))
 
         self.pc_value = TimeDistributed(nn.Sequential(
-            nn.ConvTranspose2d(32, 32, kernel_size=3, stride=3),  # 20 -> 24
+            nn.ConvTranspose2d(32, 32, kernel_size=4, stride=2),  # 20
             nn.ReLU(),
-            nn.ConvTranspose2d(32, num_outputs, kernel_size=3, stride=3),  # 42
+            nn.ConvTranspose2d(32, num_outputs, kernel_size=4, stride=2),  # 42
             nn.ReLU()
         ))
 
     def _create_rp_network(self):
         self.rp = nn.Sequential(
             Flatten(),
-            nn.Linear(8 ** 2 * 32 * 3, 3)
+            nn.Linear(9 ** 2 * 32 * 3, 3)
         )
 
     def reward_prediction(self, inputs):
@@ -164,7 +162,7 @@ class VisualNavigationModel(nn.Module):
     def pixel_control(self, inputs, masks, states):
         features, states = self._forward_base(inputs, masks, states)
         features = self.pc_base(features)
-        features = features.view(*(features.size()[:2] + (32, 8, 8))) #
+        features = features.view(*(features.size()[:2] + (32, 9, 9)))
         action_features = self.pc_action(features)
         features = self.pc_value(features) + action_features - action_features.mean(2, keepdim=True)
         return features, states
