@@ -37,9 +37,9 @@ class VisualNavigationModel(nn.Module):
 
         # 84
         self.shared_base = TimeDistributed(nn.Sequential(
-            nn.Conv2d(num_inputs, 32, 4, stride=2),   # 80
+            nn.Conv2d(num_inputs, 32, 4, stride=2),   # 41
             nn.ReLU(True),
-            nn.Conv2d(32, 16, 3, stride=2), # 26
+            nn.Conv2d(32, 16, 3, stride=2), # 20
             nn.ReLU(True),
         ))
 
