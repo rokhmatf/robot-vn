@@ -20,7 +20,7 @@ def _createDmhouseEnvironment(**kwargs):
     # NOTE: in the paper the distance travelled was computed slightly differently
     # leading to (slightly) different results
     game_units_to_meters = 1 / 57.144
-    env = gym.make('DMHouse-v1', **kwargs, renderer='hardware',
+    env = gym.make('DMHouse-v1', **kwargs, renderer='software',
                    level="custom/old_house", distance_scale=game_units_to_meters, steps_repeat=4)
     return ScaledFloatFrame(env)
 
