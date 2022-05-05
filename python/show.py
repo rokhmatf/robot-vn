@@ -15,7 +15,7 @@ if __name__ == '__main__':
     import trainer
     default_args = trainer.default_args
     agent = make_agent("dmhouse")
-    env = trainer.create_envs(1, dict(renderer="hardware", **default_args()['env_kwargs']))[0]
+    env = trainer.create_envs(1, dict(renderer="software", **default_args()['env_kwargs']))[0]
 
     while True:
         obs = env.reset()
