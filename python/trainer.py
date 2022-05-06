@@ -301,7 +301,7 @@ class DmhouseA2CTrainer(Trainer):
         return model
 
 
-@register_trainer('dmhouse-unreal', max_time_steps=10e6, validation_period=200, validation_episodes=20,  episode_log_interval=10, saving_period=100000, save=True, env_kwargs=dict(
+@register_trainer('dmhouse-unreal', max_time_steps=20e6, validation_period=200, validation_episodes=20,  episode_log_interval=10, saving_period=100000, save=True, env_kwargs=dict(
     id='DMHouseCustom-v1',
 ),
     model_kwargs=dict())
