@@ -467,7 +467,7 @@ class DmhouseTrainer(Trainer):
     def __init__(self, *args, **kwargs):
         super(DmhouseTrainer, self).__init__(*args, **kwargs)
         self.learning_rate = LinearSchedule(7e-4, 0, 40e6)
-        self.gamma = 0.99
+        self.gamma = 0.9
 
 
 @register_agent("turtlebot-noprior", actions=5)
